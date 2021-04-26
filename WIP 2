@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <math.h>
+
+#define MAXELEM 35
+
+int optionInput();
+int valuesInput();
+void divider(int*, int*, int, int);
+int option1(int);
+int option2(int);
+
+int main()
+{
+    int option; //sorting option for array
+    int realSize; //number of relevant elements in the given array
+    int values[MAXELEM] = {0}; //declares array of input values
+    int iterations[MAXELEM] = {0}; //declares array of interation values for the inputs
+    
+    option = optionInput();
+    realSize = valuesInput(values);
+    divider(values, iterations, realSize, option);
+
+    return 0;
+}
+
+int optionInput()
+{
+    int option; //sorting option for array
+    
+    printf("Enter sorting option (1) count or (2) power of two -> ");
+    scanf("%d", &option);
+    
+    while(option != 1 && option != 2)
+    {
+        printf("\nError! Enter option 1 or 2 only!\n\n");
+        printf("Enter sorting option (1) count or (2) power of two -> ");
+        scanf("%d", &option);
+    }
+    
+    return(option);
+}
+
+int valuesInput(int values[])
+{
+    int i = 0; //initliazes counter variable to run through array
+    
+    printf("Enter up to 35 integer values -> ");
+    
+    while(values[i - 1] != -1 && i < MAXELEM)
+    {
+        scanf("%d", &values[i]);
+        i++;
+    }
+    
+    return(i - 1);
+}
+
+void divider(int values[], int iterations[], int realSize, int option)
+{
+    int count; //initializes a count variable to run through the array
+    int currentVal; //stores current variable of array element
+    
+    for (count = 0; count < realSize; count++)
+    {
+        if(option == 1)
+        {
+            iterations[count] = option1(values[count]);
+            //sort1(values, iterations, realSize);
+            printf(" %i", iterations[count]);
+        }
+        else
+        {
+            iterations[count] = option2(values[count]);
+            printf(" %i", iterations[count]);
+        }
+    }
+}
+
+int option1(int currentVal)
+{
+    int iteration = 0; //stores number of iterations until value reaches target
+    
+    while(currentVal > 1)
+    {
+        if(currentVal % 2 == 0)
+        {
+            currentVal /= 2;
+        }
+        else
+        {
+            currentVal = (currentVal * 3) + 1;
+        }
+        iteration++;
+    }
+    
+    return(iteration);
+}
+
+int option2(int currentVal)
+{
+    int iteration = 0; //stores number of iterations until value reaches target
+    float logVal; //stores log base 2 of current value
+    
+    logVal = log2(currentVal);
+    
+    while(logVal - (int)logVal != 0)
+    {
+        if(currentVal % 2 == 0)
+        {
+            currentVal /= 2;
+        }
+        else
+        {
+            currentVal = (currentVal * 3) + 1;
+        }
+        logVal = log2(currentVal);
+        iteration++;
+    }
+    
+    return(iteration);
+}
