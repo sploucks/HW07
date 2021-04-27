@@ -1,0 +1,294 @@
+#include <stdio.h>
+#include <math.h>
+
+#define MAXELEM 35
+
+int optionInput();
+int valuesInput();
+void divider(int*, int*, int, int);
+int option1(int);
+int option2(int);
+void sort(int*, int*, int);
+void output(int*, int, int);
+
+int main()
+{
+    int option; //sorting option for array
+    int realSize; //number of relevant elements in the given array
+    int values[MAXELEM] = {0}; //declares array of input values
+    int iterations[MAXELEM] = {0}; //declares array of interation values for the inputs
+    
+    option = optionInput();
+    realSize = valuesInput(values);
+    divider(values, iterations, realSize, option);
+    sort(values, iterations, realSize - 1);
+    output(values, option, realSize);
+
+    return 0;
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: optionInput
+ * *
+ * *  Function Return Type: int
+ * *
+ * *  Parameters (list data type, name, and comment one per line): N/A
+ * *  
+ * *  Function Description:
+ * *  Function takes user input for the sorting option.
+ * *
+ * ***************************************************************************/
+
+int optionInput()
+{
+    int option; //sorting option for array
+    
+    printf("Enter sorting option (1) count or (2) power of two -> ");
+    scanf("%d", &option);
+    
+    while(option != 1 && option != 2)
+    {
+        printf("\nError! Enter option 1 or 2 only!\n\n");
+        printf("Enter sorting option (1) count or (2) power of two -> ");
+        scanf("%d", &option);
+    }
+    
+    return(option);
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: valuesInput
+ * *
+ * *  Function Return Type: int
+ * *
+ * *  Parameters (list data type, name, and comment one per line): 
+ * *  1) int values - the input for the array of original values
+ * *
+ * *  Function Description:
+ * *  Function takes user input for the each array element.
+ * *
+ * ***************************************************************************/
+ 
+int valuesInput(int values[])
+{
+    int i = 0; //initliazes counter variable to run through array
+    
+    printf("Enter up to 35 integer values -> ");
+    
+    while(values[i - 1] != -1 && i < MAXELEM)
+    {
+        scanf("%d", &values[i]);
+        i++;
+    }
+    
+    printf("\n");
+    
+    return(i - 1);
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: divider
+ * *
+ * *  Function Return Type: void
+ * *
+ * *  Parameters (list data type, name, and comment one per line): 
+ * *  1) int values - the input for the array of original values
+ * *  2) int iterations - counts number of mathematical iterations for each value to reach its target
+ * *  3) int realSize - the number of important values in each array
+ * *  4) int option - stores user input sorting option
+ * *
+ * *  Function Description:
+ * *  Function divides the process between the two sorting options.
+ * *
+ * ***************************************************************************/
+
+void divider(int values[], int iterations[], int realSize, int option)
+{
+    int count; //initializes a count variable to run through the array
+    int currentVal; //stores current variable of array element
+    
+    for (count = 0; count < realSize; count++)
+    {
+        if(option == 1)
+        {
+            iterations[count] = option1(values[count]);
+            //printf(" %i", iterations[count]);
+        }
+        else
+        {
+            iterations[count] = option2(values[count]);
+            //printf(" %i", iterations[count]);
+        }
+    }
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: option1
+ * *
+ * *  Function Return Type: int
+ * *
+ * *  Parameters (list data type, name, and comment one per line): 
+ * *  1) int currentVal - single current element in the array
+ * *
+ * *  Function Description:
+ * *  The previously outlined mathematical operations are performed until the target is reached.
+ * *
+ * ***************************************************************************/
+
+int option1(int currentVal)
+{
+    int iteration = 0; //stores number of iterations until value reaches target
+    
+    while(currentVal > 1)
+    {
+        if(currentVal % 2 == 0)
+        {
+            currentVal /= 2;
+        }
+        else
+        {
+            currentVal = (currentVal * 3) + 1;
+        }
+        iteration++;
+    }
+    
+    return(iteration);
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: option2
+ * *
+ * *  Function Return Type: int
+ * *
+ * *  Parameters (list data type, name, and comment one per line): 
+ * *  1) int currentVal - single current element in the array
+ * *
+ * *  Function Description:
+ * *  The previously outlined mathematical operations are performed until the target is reached.
+ * *
+ * ***************************************************************************/
+
+int option2(int currentVal)
+{
+    int iteration = 0; //stores number of iterations until value reaches target
+    float logVal; //stores log base 2 of current value
+    
+    logVal = log2(currentVal);
+    
+    while(logVal - (int)logVal != 0)
+    {
+        if(currentVal % 2 == 0)
+        {
+            currentVal /= 2;
+        }
+        else
+        {
+            currentVal = (currentVal * 3) + 1;
+        }
+        logVal = log2(currentVal);
+        iteration++;
+    }
+    
+    return(logVal);
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: sort
+ * *
+ * *  Function Return Type: void
+ * *
+ * *  Parameters (list data type, name, and comment one per line): 
+ * *  1) int values - the input for the array of original values
+ * *  2) int iterations - counts number of mathematical iterations for each value to reach its target
+ * *  3) int realSize - the number of important values in each array
+ * *
+ * *  Function Description:
+ * *  Function sorts both the iterations, and the associated values, data from smallest to largest.
+ * *
+ * ***************************************************************************/
+
+void sort(int values[], int iterations[], int realSize)
+{
+    int temp;
+
+    for(int count = 0; count < realSize; count++)
+    {
+        for(int move = realSize; move > count; move--)
+        {
+            if(iterations[move] < iterations[move - 1])
+            {
+                temp = iterations[move];
+                iterations[move] = iterations[move - 1];
+                iterations[move - 1] = temp;
+                
+                temp = values[move];
+                values[move] = values[move - 1];
+                values[move - 1] = temp;
+            }
+            else if(iterations[move] == iterations[move - 1])
+            {
+                if(values[move] < values[move - 1])
+                {
+                    temp = values[move];
+                    values[move] = values[move - 1];
+                    values[move - 1] = temp;
+                }
+            }
+        }
+    }
+}
+
+/***************************************************************************
+ * *
+ * *  Function Information
+ * *
+ * *  Name of Function: sort
+ * *
+ * *  Function Return Type: void
+ * *
+ * *  Parameters (list data type, name, and comment one per line): 
+ * *  1) int values - the input for the array of original values
+ * *  2) int option - stores user input sorting option
+ * *  3) int realSize - the number of important values in each array
+ * *
+ * *  Function Description:
+ * *  The sorted array output is printed to the command screen.
+ * *
+ * ***************************************************************************/
+
+void output(int values[], int option, int realSize)
+{
+    if(option == 1)
+    {
+        printf("Sorted data by count:");
+    }
+    else
+    {
+        printf("Sorted data by power of two:");
+    }
+    
+    for(int count = 0; count < realSize; count++)
+    {
+        printf(" %i", values[count]);
+    }
+    
+    printf("\n");
+}
